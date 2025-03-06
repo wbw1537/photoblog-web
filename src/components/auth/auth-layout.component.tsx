@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { useTranslations } from 'next-intl';
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -6,14 +7,16 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title }) => {
+  const t = useTranslations();
+  
   return (
     <div className="flex h-screen">
       {/* Left section (66.6%) - Empty for now, will contain logo and text later */}
       <div className="w-2/3 bg-gray-50 flex items-center justify-center">
         <div className="p-12">
           {/* Placeholder for future content */}
-          <h2 className="text-3xl font-bold text-gray-800">Welcome to PhotoBlog</h2>
-          <p className="mt-4 text-gray-600">Share your moments with the world</p>
+          <h2 className="text-3xl font-bold text-gray-800">{t('auth.title')}</h2>
+          <p className="mt-4 text-gray-600">{t('auth.subtitle')}</p>
         </div>
       </div>
       

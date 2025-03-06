@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
 import { RegisterData } from '../../types/auth.type';
@@ -9,6 +10,7 @@ import { RegisterData } from '../../types/auth.type';
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '' });
   const router = useRouter();
+  const t = useTranslations();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,7 +36,7 @@ const RegisterForm: React.FC = () => {
     <form onSubmit={handleSubmit} className='space-y-6'>
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          User Name
+          {t('auth.userName')}
         </label>
         <input
           type="text"
@@ -48,7 +50,7 @@ const RegisterForm: React.FC = () => {
       </div>
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Email
+          {t('auth.email')}
         </label>
         <input
           type="email"
@@ -62,7 +64,7 @@ const RegisterForm: React.FC = () => {
       </div>
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-          Password
+          {t('auth.password')}
         </label>
         <input
           type="password"
@@ -79,18 +81,18 @@ const RegisterForm: React.FC = () => {
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Register
+          {t('auth.register')}
         </button>
       </div>
       <div className="text-center text-sm">
         <p className="text-gray-600">
-          Already have an account?{' '}
+          {t('auth.alreadyHaveAccount')}{' '}
           <button 
             type="button" 
             onClick={handleLogin} 
             className="font-medium text-indigo-600 hover:text-indigo-500 underline"
           >
-            Login
+            {t('auth.login')}
           </button>
         </p>
       </div>

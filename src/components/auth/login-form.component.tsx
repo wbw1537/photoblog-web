@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
 import { LoginData } from '../../types/auth.type';
@@ -9,6 +10,7 @@ import { LoginData } from '../../types/auth.type';
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginData>({ email: '', password: '' });
   const router = useRouter();
+  const t = useTranslations();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,7 +36,7 @@ const LoginForm: React.FC = () => {
     <form onSubmit={handleSubmit} className='space-y-6'>
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Email
+          {t('auth.email')}
         </label>
         <input
           type="email"
@@ -48,7 +50,7 @@ const LoginForm: React.FC = () => {
       </div>
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-          Password
+          {t('auth.password')}
         </label>
         <input
           type="password"
@@ -63,10 +65,10 @@ const LoginForm: React.FC = () => {
       <div className="flex items-center justify-between text-sm">
         <div className="flex items-center">
           <input id="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-          <label htmlFor="remember-me" className="ml-2 block text-gray-700">Remember me</label>
+          <label htmlFor="remember-me" className="ml-2 block text-gray-700">{t('auth.rememberMe')}</label>
         </div>
         <div>
-          <a href="#" className="text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+          <a href="#" className="text-indigo-600 hover:text-indigo-500">{t('auth.forgotPassword')}</a>
         </div>
       </div>
       <div>
@@ -74,18 +76,18 @@ const LoginForm: React.FC = () => {
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Sign in
+          {t('auth.signIn')}
         </button>
       </div>
       <div className="text-center text-sm">
         <p className="text-gray-600">
-          Don't have an account?{' '}
+          {t('auth.dontHaveAccount')}{' '}
           <button 
             type="button" 
             onClick={handleRegister} 
             className="font-medium text-indigo-600 hover:text-indigo-500 underline"
           >
-            Register
+            {t('auth.register')}
           </button>
         </p>
       </div>

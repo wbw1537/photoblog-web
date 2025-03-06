@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "login": "登录",
+    "register": "注册",
+    "email": "邮箱",
+    "password": "密码",
+    "userName": "用户名",
+    "rememberMe": "记住我",
+    "forgotPassword": "忘记密码?",
+    "signIn": "登录",
+    "dontHaveAccount": "没有账号?",
+    "alreadyHaveAccount": "已有账号?",
+    "title": "欢迎来到 PhotoBlog",
+    "subtitle": "与世界分享您的精彩时刻"
+  }
+}
