@@ -1,5 +1,6 @@
 export interface RegisterData extends LoginData {
   name: string;
+  basePath: string;
 }
 
 export interface LoginData {

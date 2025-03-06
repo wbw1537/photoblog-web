@@ -11,6 +11,8 @@
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?",
     "title": "Welcome to PhotoBlog",
-    "subtitle": "Share your moments with the world"
+    "subtitle": "Share your moments with the world",
+    "loginFailed": "Login failed",
+    "registrationFailed": "Registration failed"
   }
 }

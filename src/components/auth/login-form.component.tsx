@@ -9,21 +9,29 @@ import { LoginData } from '../../types/auth.type';
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginData>({ email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (error) setError(null); // Clear error when user starts typing
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     try {
       const response = await authApi.login(formData);
       console.log('Logged in:', response.data);
-      // router.push('/dashboard'); // Redirect to dashboard after login
-    } catch (error) {
+      router.push('/');
+    } catch (error: any) {
       console.error('Login failed:', error);
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError(t('auth.loginFailed'));
+      }
     }
   };
 
@@ -34,6 +42,11 @@ const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className='space-y-6'>
+      {error && (
+        <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md border border-red-300">
+          {error}
+        </div>
+      )}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
           {t('auth.email')}
