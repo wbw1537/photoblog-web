@@ -14,12 +14,21 @@
     "subtitle": "与世界分享您的精彩时刻",
     "loginFailed": "登录失败",
     "registrationFailed": "注册失败",
+    "emailTaken": "此邮箱已被注册",
+    "accountPending": "账户等待审批",
+    "pendingTitle": "等待审批",
+    "pendingDescription": "您的账户已创建，正在等待管理员审批。请稍后再查看。",
+    "refreshStatus": "刷新状态",
+    "checking": "检查中...",
+    "stillPending": "您的账户仍在等待审批。",
+    "errorCheckingStatus": "检查审批状态时出错。请重试。"
+  },
+  "basePath": {
     "basePath": "存储位置",
     "browse": "浏览",
-    "basePathHelp": "选择存储照片的文件夹",
+    "basePathHelp": "选择一个文件夹，您的照片将存储在其中",
     "selectBasePathTitle": "设置存储位置",
     "selectBasePathSubtitle": "选择存储照片的位置",
-    "completeRegistration": "完成注册",
-    "emailTaken": "此邮箱已被注册"
+    "completeRegistration": "完成注册"
   }
 }

@@ -1,6 +1,5 @@
 export interface RegisterData extends LoginData {
   name: string;
-  basePath: string;
 }
 
 export interface LoginData {
@@ -16,7 +15,7 @@ export interface UserResponse {
   id: string;
   name: string;
   email: string;
-  admin: boolean;
+  type: UserType;
   basePath: string;
 }
 
@@ -27,3 +26,11 @@ export interface UserLoginResponse extends UserResponse {
 export interface EmailAvailabilityResponse {
   exists: boolean;
 }
+
+export const placeholder = "**PLACEHOLDER**" as const;
+
+export const enum UserType {
+  Admin = 'Admin',
+  Normal = 'Normal',
+  Pending = 'Pending'
+};

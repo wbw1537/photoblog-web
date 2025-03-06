@@ -5,13 +5,15 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
-import { LoginData } from '../../types/auth.type';
+import { LoginData, UserType } from '../../types/auth.type';
+import { useAuth } from '@/contexts/auth.context';
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginData>({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations();
+  const { setUser, setToken } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (error) setError(null); // Clear error when user starts typing
@@ -24,7 +26,23 @@ const LoginForm: React.FC = () => {
     try {
       const response = await authApi.login(formData);
       console.log('Logged in:', response.data);
-      router.push('/');
+      
+      // Store token in localStorage
+      localStorage.setItem('token', response.data.token);
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(response.data));
+      
+      // Update auth context
+      setUser(response.data);
+      setToken(response.data.token);
+      
+      // Check user type and redirect accordingly
+      if (response.data.type === UserType.Pending) {
+        router.push('/auth/pending');
+      } else {
+        router.push('/');
+      }
     } catch (error: any) {
       console.error('Login failed:', error);
       if (error.response?.data?.message) {

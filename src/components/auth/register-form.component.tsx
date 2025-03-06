@@ -6,23 +6,26 @@ import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
 import { RegisterData } from '../../types/auth.type';
+import { useAuth } from '@/contexts/auth.context';
 
 const RegisterForm: React.FC = () => {
-  const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '', basePath: '' });
+  const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const t = useTranslations();
   const emailCheckTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { setUser, setToken } = useAuth();
 
   const checkEmailAvailability = async (email: string) => {
     if (!email || !email.includes('@')) return;
-    
+
     setIsCheckingEmail(true);
     try {
       const emailData = { email };
-      const response = await authApi.email_availability(emailData);
+      const response = await authApi.emailAvailability(emailData);
       if (response.data.exists === true) {
         setEmailError(t('auth.emailTaken'));
       } else {
@@ -39,14 +42,14 @@ const RegisterForm: React.FC = () => {
     if (error) setError(null); // Clear error when user starts typing
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     // Check email availability with debouncing
     if (name === 'email') {
       // Clear previous timeout
       if (emailCheckTimeoutRef.current) {
         clearTimeout(emailCheckTimeoutRef.current);
       }
-      
+
       // Set new timeout to check email after typing stops for 500ms
       emailCheckTimeoutRef.current = setTimeout(() => {
         checkEmailAvailability(value);
@@ -66,20 +69,59 @@ const RegisterForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     // Check if email is available before proceeding
     if (emailError) {
       return;
     }
-    
+
+    setIsSubmitting(true);
+
     try {
-      // Store registration data in sessionStorage
-      sessionStorage.setItem('registrationData', JSON.stringify(formData));
-      // Navigate to base path selection page
-      router.push('/auth/select-base-path');
-    } catch (error: any) {
-      console.error('Error:', error);
-      setError(t('auth.registrationFailed'));
+      // Step 1: Register the user
+      await authApi.register(formData);
+      console.log('Registration successful');
+
+      try {
+        // Step 2: Automatically log in the user
+        const loginResponse = await authApi.login({ 
+          email: formData.email, 
+          password: formData.password 
+        });
+        console.log('Automatic login successful');
+
+        // Step 3: Store authentication data
+        const userData = loginResponse.data;
+        const userToken = userData.token;
+
+        // Update local storage
+        localStorage.setItem('token', userToken);
+        localStorage.setItem('user', JSON.stringify(userData));
+
+        // Update auth context
+        setUser(userData);
+        setToken(userToken);
+
+        // Step 4: Navigate to appropriate page
+        router.push('/auth/pending');
+      } catch (loginError: any) {
+        console.error('Automatic login failed:', loginError);
+        // Show login error but don't prevent navigation - registration was successful
+        setError(t('auth.automaticLoginFailed'));
+        
+        // Still navigate to login page as fallback
+        setTimeout(() => {
+          router.push('/auth/login');
+        }, 2000);
+      }
+    } catch (registerError: any) {
+      console.error('Registration failed:', registerError);
+      if (registerError.response?.data?.message) {
+        setError(registerError.response.data.message);
+      } else {
+        setError(t('auth.registrationFailed'));
+      }
+      setIsSubmitting(false);
     }
   };
 
@@ -107,9 +149,8 @@ const RegisterForm: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className={`mt-1 block w-full px-3 py-2 border ${
-              emailError ? 'border-red-300' : 'border-gray-300'
-            } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+            className={`mt-1 block w-full px-3 py-2 border ${emailError ? 'border-red-300' : 'border-gray-300'
+              } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
           />
           {isCheckingEmail && (
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -153,20 +194,20 @@ const RegisterForm: React.FC = () => {
       <div>
         <button
           type="submit"
-          disabled={!!emailError || isCheckingEmail}
+          disabled={!!emailError || isCheckingEmail || isSubmitting}
           className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-            emailError || isCheckingEmail ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+            emailError || isCheckingEmail || isSubmitting ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
           } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
         >
-          {t('auth.register')}
+          {isSubmitting ? t('common.submitting') : t('auth.register')}
         </button>
       </div>
       <div className="text-center text-sm">
         <p className="text-gray-600">
           {t('auth.alreadyHaveAccount')}{' '}
-          <button 
-            type="button" 
-            onClick={handleLogin} 
+          <button
+            type="button"
+            onClick={handleLogin}
             className="font-medium text-indigo-600 hover:text-indigo-500 underline"
           >
             {t('auth.login')}
