@@ -13,6 +13,13 @@
     "title": "Welcome to PhotoBlog",
     "subtitle": "Share your moments with the world",
     "loginFailed": "Login failed",
-    "registrationFailed": "Registration failed"
+    "registrationFailed": "Registration failed",
+    "basePath": "Storage Location",
+    "browse": "Browse",
+    "basePathHelp": "Select a folder where your photos will be stored",
+    "selectBasePathTitle": "Set Storage Location",
+    "selectBasePathSubtitle": "Choose where to store your photos",
+    "completeRegistration": "Complete Registration",
+    "emailTaken": "This email is already registered"
   }
 }

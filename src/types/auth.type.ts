@@ -8,6 +8,10 @@ export interface LoginData {
   password: string;
 }
 
+export interface EmailAvailabilityData {
+  email: string;
+}
+
 export interface UserResponse {
   id: string;
   name: string;
@@ -18,4 +22,8 @@ export interface UserResponse {
 
 export interface UserLoginResponse extends UserResponse {
   token: string;
+}
+
+export interface EmailAvailabilityResponse {
+  exists: boolean;
 }

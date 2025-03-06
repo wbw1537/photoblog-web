@@ -13,6 +13,13 @@
     "title": "欢迎来到 PhotoBlog",
     "subtitle": "与世界分享您的精彩时刻",
     "loginFailed": "登录失败",
-    "registrationFailed": "注册失败"
+    "registrationFailed": "注册失败",
+    "basePath": "存储位置",
+    "browse": "浏览",
+    "basePathHelp": "选择存储照片的文件夹",
+    "selectBasePathTitle": "设置存储位置",
+    "selectBasePathSubtitle": "选择存储照片的位置",
+    "completeRegistration": "完成注册",
+    "emailTaken": "此邮箱已被注册"
   }
 }

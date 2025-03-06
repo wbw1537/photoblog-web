@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -10,28 +10,76 @@ import { RegisterData } from '../../types/auth.type';
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '', basePath: '' });
   const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const router = useRouter();
   const t = useTranslations();
+  const emailCheckTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const checkEmailAvailability = async (email: string) => {
+    if (!email || !email.includes('@')) return;
+    
+    setIsCheckingEmail(true);
+    try {
+      const emailData = { email };
+      const response = await authApi.email_availability(emailData);
+      if (response.data.exists === true) {
+        setEmailError(t('auth.emailTaken'));
+      } else {
+        setEmailError(null);
+      }
+    } catch (error) {
+      console.error('Error checking email availability:', error);
+    } finally {
+      setIsCheckingEmail(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (error) setError(null); // Clear error when user starts typing
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Check email availability with debouncing
+    if (name === 'email') {
+      // Clear previous timeout
+      if (emailCheckTimeoutRef.current) {
+        clearTimeout(emailCheckTimeoutRef.current);
+      }
+      
+      // Set new timeout to check email after typing stops for 500ms
+      emailCheckTimeoutRef.current = setTimeout(() => {
+        checkEmailAvailability(value);
+      }, 50);
+    }
   };
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (emailCheckTimeoutRef.current) {
+        clearTimeout(emailCheckTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    
+    // Check if email is available before proceeding
+    if (emailError) {
+      return;
+    }
+    
     try {
-      const response = await authApi.register(formData);
-      console.log('Registered:', response.data);
-      router.push('/auth/login'); // Redirect to login after successful registration
+      // Store registration data in sessionStorage
+      sessionStorage.setItem('registrationData', JSON.stringify(formData));
+      // Navigate to base path selection page
+      router.push('/auth/select-base-path');
     } catch (error: any) {
-      console.error('Registration failed:', error);
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError(t('auth.registrationFailed'));
-      }
+      console.error('Error:', error);
+      setError(t('auth.registrationFailed'));
     }
   };
 
@@ -51,15 +99,28 @@ const RegisterForm: React.FC = () => {
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
           {t('auth.email')}
         </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        />
+        <div className="relative">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className={`mt-1 block w-full px-3 py-2 border ${
+              emailError ? 'border-red-300' : 'border-gray-300'
+            } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+          />
+          {isCheckingEmail && (
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <svg className="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+          )}
+        </div>
+        {emailError && <p className="mt-1 text-sm text-red-600">{emailError}</p>}
       </div>
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -92,7 +153,10 @@ const RegisterForm: React.FC = () => {
       <div>
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={!!emailError || isCheckingEmail}
+          className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+            emailError || isCheckingEmail ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
         >
           {t('auth.register')}
         </button>
