@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { authApi } from '../../lib/api/auth.api';
 import { RegisterData } from '../../types/auth.type';
 import { useAuth } from '@/contexts/auth.context';
+import { logError } from '@/lib/utils/error.util';
 
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '' });
@@ -32,7 +33,9 @@ const RegisterForm: React.FC = () => {
         setEmailError(null);
       }
     } catch (error) {
-      console.error('Error checking email availability:', error);
+      logError(error);
+      const errorMessage = t('auth.emailCheckFailed');
+      console.error('Error checking email availability:', errorMessage);
     } finally {
       setIsCheckingEmail(false);
     }
@@ -104,23 +107,20 @@ const RegisterForm: React.FC = () => {
 
         // Step 4: Navigate to appropriate page
         router.push('/auth/pending');
-      } catch (loginError: any) {
-        console.error('Automatic login failed:', loginError);
-        // Show login error but don't prevent navigation - registration was successful
-        setError(t('auth.automaticLoginFailed'));
+      } catch (loginErr) {
+        logError(loginErr);
+        const errorMessage = t('auth.automaticLoginFailed');
+        setError(errorMessage);
         
         // Still navigate to login page as fallback
         setTimeout(() => {
           router.push('/auth/login');
         }, 2000);
       }
-    } catch (registerError: any) {
-      console.error('Registration failed:', registerError);
-      if (registerError.response?.data?.message) {
-        setError(registerError.response.data.message);
-      } else {
-        setError(t('auth.registrationFailed'));
-      }
+    } catch (registerErr) {
+      logError(registerErr);
+      const errorMessage = t('auth.registrationFailed');
+      setError(errorMessage);
       setIsSubmitting(false);
     }
   };

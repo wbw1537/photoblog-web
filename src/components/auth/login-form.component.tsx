@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { authApi } from '../../lib/api/auth.api';
 import { LoginData, UserType } from '../../types/auth.type';
 import { useAuth } from '@/contexts/auth.context';
+import { logError } from '@/lib/utils/error.util';
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginData>({ email: '', password: '' });
@@ -25,7 +26,6 @@ const LoginForm: React.FC = () => {
     setError(null);
     try {
       const response = await authApi.login(formData);
-      console.log('Logged in:', response.data);
       
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
@@ -43,13 +43,10 @@ const LoginForm: React.FC = () => {
       } else {
         router.push('/');
       }
-    } catch (error: any) {
-      console.error('Login failed:', error);
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError(t('auth.loginFailed'));
-      }
+    } catch (err) {
+      logError(err);
+      const errorMessage = t('auth.loginFailed');
+      setError(errorMessage);
     }
   };
 

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { authApi } from '../../lib/api/auth.api';
 import { UserType } from '../../types/auth.type';
 import { useAuth } from '@/contexts/auth.context';
+import { handleApiError, logError } from '@/lib/utils/error.util';
 
 const PendingApprovalComponent: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -41,13 +42,18 @@ const PendingApprovalComponent: React.FC = () => {
         // Still pending
         setError(t('auth.stillPending'));
       }
-    } catch (error: any) {
-      console.error('Error checking status:', error);
-      if (error.response?.status === 401) {
+    } catch (err) {
+      logError(err);
+      const appError = handleApiError(err);
+      
+      // Handle specific error cases
+      if (appError.code === 'AUTH_FAILED' 
+        || (appError.originalError as { response?: { status: number } })?.response?.status === 401) {
         // Session expired, redirect to login
         router.push('/auth/login');
       } else {
-        setError(t('auth.errorCheckingStatus'));
+        const errorMessage = t('auth.errorCheckingStatus');
+        setError(errorMessage);
       }
     } finally {
       setIsRefreshing(false);
