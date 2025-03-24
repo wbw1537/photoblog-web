@@ -1,15 +1,15 @@
 import { AppError, ErrorSeverity } from './error.type';
 
-export interface RegisterData extends LoginData {
+export interface RegisterRequest extends LoginRequest {
   name: string;
 }
 
-export interface LoginData {
+export interface LoginRequest {
   email: string;
   password: string;
 }
 
-export interface EmailAvailabilityData {
+export interface EmailAvailabilityRequest {
   email: string;
 }
 
@@ -19,10 +19,18 @@ export interface UserResponse {
   email: string;
   type: UserType;
   basePath: string;
+  cachePath: string;
+}
+
+export interface Token {
+  token: string;
+  expiresAt: number;
+  tokenType: string;
 }
 
 export interface UserLoginResponse extends UserResponse {
-  token: string;
+  accessToken: Token;
+  refreshToken: Token;
 }
 
 export interface EmailAvailabilityResponse {

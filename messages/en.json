@@ -21,7 +21,8 @@
     "refreshStatus": "Refresh Status",
     "checking": "Checking...",
     "stillPending": "Your account is still pending approval.",
-    "errorCheckingStatus": "Error checking approval status. Please try again."
+    "errorCheckingStatus": "Error checking approval status. Please try again.",
+    "signOut": "Sign Out"
   },
   "basePath": {
     "basePath": "Storage Location",
@@ -30,5 +31,27 @@
     "selectBasePathTitle": "Set Storage Location",
     "selectBasePathSubtitle": "Choose where to store your photos",
     "completeRegistration": "Complete Registration"
+  },
+  "photos": {
+    "camera": "Camera",
+    "lens": "Lens",
+    "focalLength": "Focal Length",
+    "aperture": "Aperture",
+    "shutterSpeed": "Shutter Speed",
+    "iso": "ISO",
+    "favorites": "Favorites",
+    "search": "Search",
+    "upload": "Upload",
+    "all": "All",
+    "recent": "Recent",
+    "albums": "Albums",
+    "library": "Library",
+    "errorLoading": "Error loading photos",
+    "noPhotosFound": "No photos found"
+  },
+  "common": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "retry": "Retry"
   }
 }

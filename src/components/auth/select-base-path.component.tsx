@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
-import { RegisterData } from '../../types/auth.type';
+import { RegisterRequest } from '../../types/auth.type';
 
 const SelectBasePathForm: React.FC = () => {
-  const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '', basePath: '' });
+  const [formData, setFormData] = useState<RegisterRequest>({ name: '', email: '', password: '', basePath: '' });
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations();

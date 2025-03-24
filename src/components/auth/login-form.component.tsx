@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
-import { LoginData, UserType } from '../../types/auth.type';
+import { LoginRequest, UserType } from '../../types/auth.type';
 import { useAuth } from '@/contexts/auth.context';
 import { logError } from '@/lib/utils/error.util';
 
 const LoginForm: React.FC = () => {
-  const [formData, setFormData] = useState<LoginData>({ email: '', password: '' });
+  const [formData, setFormData] = useState<LoginRequest>({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations();
@@ -27,21 +27,22 @@ const LoginForm: React.FC = () => {
     try {
       const response = await authApi.login(formData);
       
-      // Store token in localStorage
-      localStorage.setItem('token', response.data.token);
+      // Store tokens in localStorage
+      localStorage.setItem('accessToken', response.data.accessToken.token);
+      localStorage.setItem('refreshToken', response.data.refreshToken.token);
       
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(response.data));
       
       // Update auth context
       setUser(response.data);
-      setToken(response.data.token);
+      setToken(response.data.accessToken.token);
       
       // Check user type and redirect accordingly
       if (response.data.type === UserType.Pending) {
         router.push('/auth/pending');
       } else {
-        router.push('/');
+        router.push('/photos');
       }
     } catch (err) {
       logError(err);

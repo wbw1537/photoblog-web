@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { authApi } from '../../lib/api/auth.api';
-import { RegisterData } from '../../types/auth.type';
+import { RegisterRequest } from '../../types/auth.type';
 import { useAuth } from '@/contexts/auth.context';
 import { logError } from '@/lib/utils/error.util';
 
 const RegisterForm: React.FC = () => {
-  const [formData, setFormData] = useState<RegisterData>({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState<RegisterRequest>({ name: '', email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
@@ -95,7 +95,7 @@ const RegisterForm: React.FC = () => {
 
         // Step 3: Store authentication data
         const userData = loginResponse.data;
-        const userToken = userData.token;
+        const userToken = userData.accessToken.token;
 
         // Update local storage
         localStorage.setItem('token', userToken);
