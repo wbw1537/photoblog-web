@@ -1,0 +1,57 @@
+{
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "userName": "User Name",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "title": "Welcome to PhotoBlog",
+    "subtitle": "Share your moments with the world",
+    "loginFailed": "Login failed",
+    "registrationFailed": "Registration failed",
+    "emailTaken": "This email is already registered",
+    "accountPending": "Account Pending Approval",
+    "pendingTitle": "Waiting for Approval",
+    "pendingDescription": "Your account has been created and is awaiting approval from an administrator. Please check back later.",
+    "refreshStatus": "Refresh Status",
+    "checking": "Checking...",
+    "stillPending": "Your account is still pending approval.",
+    "errorCheckingStatus": "Error checking approval status. Please try again.",
+    "signOut": "Sign Out"
+  },
+  "basePath": {
+    "basePath": "Storage Location",
+    "browse": "Browse",
+    "basePathHelp": "Select a folder where your photos will be stored",
+    "selectBasePathTitle": "Set Storage Location",
+    "selectBasePathSubtitle": "Choose where to store your photos",
+    "completeRegistration": "Complete Registration"
+  },
+  "photos": {
+    "camera": "Camera",
+    "lens": "Lens",
+    "focalLength": "Focal Length",
+    "aperture": "Aperture",
+    "shutterSpeed": "Shutter Speed",
+    "iso": "ISO",
+    "favorites": "Favorites",
+    "search": "Search",
+    "upload": "Upload",
+    "all": "All",
+    "recent": "Recent",
+    "albums": "Albums",
+    "library": "Library",
+    "errorLoading": "Error loading photos",
+    "noPhotosFound": "No photos found"
+  },
+  "common": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "retry": "Retry"
+  }
+}
