@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import SidebarNav from '@/components/photos/sidebar-nav.component';
+import SidebarNav from '@/components/common/sidebar-nav.component';
 import PhotosToolbar from '@/components/photos/photos-toolbar.component';
 import PhotoGallery from '@/components/photos/photo-gallery.component';
 import { PhotosRequest } from '@/types/photo.type';

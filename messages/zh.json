@@ -1,4 +1,12 @@
 {
+  "common": {
+    "profile": "个人资料",
+    "settings": "设置",
+    "retry": "重试",
+    "photoBlog": "图库博客",
+    "photos": "图库",
+    "blogs": "博客"
+  },
   "auth": {
     "login": "登录",
     "register": "注册",
@@ -49,9 +57,7 @@
     "errorLoading": "加载照片时出错",
     "noPhotosFound": "未找到照片"
   },
-  "common": {
-    "profile": "个人资料",
-    "settings": "设置",
-    "retry": "重试"
+  "blogs": {
+    "all": "全部"
   }
 }

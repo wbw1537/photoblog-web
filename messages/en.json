@@ -1,4 +1,12 @@
 {
+  "common": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "retry": "Retry",
+    "photoBlog": "Photoblog",
+    "photos": "Photos",
+    "blogs": "Blogs"
+  },
   "auth": {
     "login": "Login",
     "register": "Register",
@@ -49,9 +57,7 @@
     "errorLoading": "Error loading photos",
     "noPhotosFound": "No photos found"
   },
-  "common": {
-    "profile": "Profile",
-    "settings": "Settings",
-    "retry": "Retry"
+  "blogs": {
+    "all": "All"
   }
 }
