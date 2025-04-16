@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Photo } from '@/types/photo.type';
 import { photoFileApi } from '@/lib/api/photo-file.api';
 import { logError } from '@/lib/utils/error.util';
-import { FileResolution, PhotoViewRequest } from '@/types/photo-file.type';
 
 interface PhotoCardProps {
   photo: Photo;
@@ -29,10 +28,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({ photo, onClick }) => {
       
       try {
         // Use the photoFileApi to fetch the image
-        const photoViewRequest: PhotoViewRequest = {
-          resolution: FileResolution.PREVIEW
-        }
-        const response = await photoFileApi.getPhotoView(photo.files[0].id, photoViewRequest);
+        const response = await photoFileApi.getPhotoPreview(photo.files[0].id);
         
         // Create an object URL from the blob
         objectUrl = URL.createObjectURL(response.data);
