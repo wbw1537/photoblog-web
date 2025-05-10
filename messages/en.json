@@ -58,6 +58,16 @@
     "noPhotosFound": "No photos found"
   },
   "blogs": {
-    "all": "All"
+    "all": "All",
+    "article": "Article",
+    "photoPost": "Photo Post",
+    "search": "Search blogs",
+    "create": "Create Blog",
+    "type": "Blog Type",
+    "noBlogs": "No blogs found",
+    "tryDifferentSearch": "Try a different search term",
+    "fetchError": "Error loading blogs",
+    "readMore": "Read More",
+    "postedOn": "Posted on"
   }
 }

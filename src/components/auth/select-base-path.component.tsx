@@ -5,8 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { authApi } from '../../lib/api/auth.api';
-import { RegisterRequest } from '../../types/auth.type';
+import { userApi } from '../../lib/api/user.api';
+import { RegisterRequest } from '../../types/user.type';
 
 const SelectBasePathForm: React.FC = () => {
   const [formData, setFormData] = useState<RegisterRequest>({ name: '', email: '', password: '', basePath: '' });
@@ -33,7 +33,7 @@ const SelectBasePathForm: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await authApi.register(formData);
+      const response = await userApi.register(formData);
       console.log('Registered:', response.data);
       
       // Clear the stored data

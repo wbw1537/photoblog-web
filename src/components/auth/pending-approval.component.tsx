@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { authApi } from '../../lib/api/auth.api';
-import { UserType } from '../../types/auth.type';
+import { userApi } from '../../lib/api/user.api';
+import { UserType } from '../../types/user.type';
 import { useAuth } from '@/contexts/auth.context';
 import { handleApiError, logError } from '@/lib/utils/error.util';
 
@@ -30,7 +30,7 @@ const PendingApprovalComponent: React.FC = () => {
     
     try {
       // Get current user info
-      const response = await authApi.getUserInfo();
+      const response = await userApi.getUserInfo();
       
       // Update user context
       setUser(response.data);

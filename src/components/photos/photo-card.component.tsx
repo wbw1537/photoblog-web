@@ -16,9 +16,14 @@ const PhotoCard: React.FC<PhotoCardProps> = ({ photo, onClick }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [aspectRatio, setAspectRatio] = useState<number>(2/3); // Default aspect ratio
+  const [randomPeople, setRandomPeople] = useState<string | null>(null);
   
   useEffect(() => {
     let objectUrl: string | null = null;
+
+    // Set random people name for the overlay
+    const randomNames = ['John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Brown'];
+    setRandomPeople(randomNames[Math.floor(Math.random() * randomNames.length)]);
     
     const fetchImage = async () => {
       if (!photo.files || photo.files.length === 0) {
@@ -103,7 +108,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({ photo, onClick }) => {
       
       {/* Title overlay - always visible */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
-        <h3 className="text-sm font-medium truncate">{photo.title}</h3>
+        <h3 className="text-sm font-medium truncate">From: {randomPeople}</h3>
       </div>
       
       {/* Metadata overlay - visible on hover */}

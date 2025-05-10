@@ -4,8 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { authApi } from '../../lib/api/auth.api';
-import { RegisterRequest } from '../../types/auth.type';
+import { userApi } from '../../lib/api/user.api';
+import { RegisterRequest } from '../../types/user.type';
 import { useAuth } from '@/contexts/auth.context';
 import { logError } from '@/lib/utils/error.util';
 
@@ -26,7 +26,7 @@ const RegisterForm: React.FC = () => {
     setIsCheckingEmail(true);
     try {
       const emailData = { email };
-      const response = await authApi.emailAvailability(emailData);
+      const response = await userApi.emailAvailability(emailData);
       if (response.data.exists === true) {
         setEmailError(t('auth.emailTaken'));
       } else {
@@ -82,12 +82,12 @@ const RegisterForm: React.FC = () => {
 
     try {
       // Step 1: Register the user
-      await authApi.register(formData);
+      await userApi.register(formData);
       console.log('Registration successful');
 
       try {
         // Step 2: Automatically log in the user
-        const loginResponse = await authApi.login({ 
+        const loginResponse = await userApi.login({ 
           email: formData.email, 
           password: formData.password 
         });

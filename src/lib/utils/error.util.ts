@@ -4,7 +4,7 @@ import {
   AuthenticationError, 
   UnauthorizedError,
   RegistrationError
-} from '@/types/auth.type';
+} from '@/types/user.type';
 
 /**
  * Handles API errors and transforms them into appropriate AppError instances

@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { authApi } from '../../lib/api/auth.api';
-import { LoginRequest, UserType } from '../../types/auth.type';
+import { userApi } from '../../lib/api/user.api';
+import { LoginRequest, UserType } from '../../types/user.type';
 import { useAuth } from '@/contexts/auth.context';
 import { logError } from '@/lib/utils/error.util';
 
@@ -25,7 +25,7 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await authApi.login(formData);
+      const response = await userApi.login(formData);
       
       // Store tokens in localStorage
       localStorage.setItem('accessToken', response.data.accessToken.token);

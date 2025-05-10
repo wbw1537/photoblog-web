@@ -14,3 +14,10 @@ export interface PhotoTagResponse {
   }
 }
 
+export interface BlogTagResponse {
+  blogId: string;
+  tagId: string;
+  tags: {
+    name: string;
+  }
+}

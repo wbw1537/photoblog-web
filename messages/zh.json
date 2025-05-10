@@ -5,7 +5,14 @@
     "retry": "重试",
     "photoBlog": "图库博客",
     "photos": "图库",
-    "blogs": "博客"
+    "blogs": "博客",
+    "shareSpace": "共享空间",
+    "loading": "加载中..."
+  },
+  "profile": {
+    "edit": "编辑",
+    "save": "保存",
+    "cancel": "取消"
   },
   "auth": {
     "login": "登录",
@@ -14,6 +21,9 @@
     "password": "密码",
     "userName": "用户名",
     "rememberMe": "记住我",
+    "type": "用户类型",
+    "address": "地址(域名/IP)",
+    "cachePath": "缓存路径",
     "forgotPassword": "忘记密码？",
     "signIn": "登录",
     "dontHaveAccount": "没有账号?",
@@ -33,7 +43,7 @@
     "signOut": "登出"
   },
   "basePath": {
-    "basePath": "存储位置",
+    "basePath": "存储路径",
     "browse": "浏览",
     "basePathHelp": "选择存储照片的文件夹",
     "selectBasePathTitle": "设置存储位置",
@@ -55,9 +65,47 @@
     "albums": "相册",
     "library": "图库",
     "errorLoading": "加载照片时出错",
-    "noPhotosFound": "未找到照片"
+    "noPhotosFound": "未找到照片",
+    "scanStatus": "扫描状态",
+    "scanStatusTitle": "图库扫描状态",
+    "loading": "加载中...",
+    "photosIncreased": "增加的照片",
+    "photosIncreasedScanned": "已扫描的新增照片",
+    "photosNotMatched": "不匹配的照片",
+    "photosNotMatchedMatchedWithIncrease": "不匹配但已增加匹配的照片",
+    "photosNotMatchedDeleted": "不匹配且已删除的照片",
+    "photosMatched": "匹配的照片",
+    "photosMatchedUpdated": "匹配且已更新的照片"
   },
   "blogs": {
-    "all": "全部"
+    "all": "全部",
+    "article": "文章",
+    "photoPost": "图文",
+    "search": "搜索博客",
+    "create": "创建博客",
+    "type": "博客类型",
+    "noBlogs": "未找到博客",
+    "tryDifferentSearch": "尝试使用其他搜索词",
+    "fetchError": "加载博客时出错",
+    "readMore": "阅读更多",
+    "postedOn": "发表于"
+  },
+  "shareSpace": {
+    "all": "全部",
+    "management": "管理",
+    "managementTitle": "IPv6 地址管理",
+    "addIpv6Address": "添加 IPv6 地址",
+    "ipv6AddressLabel": "IPv6 地址",
+    "ipv6AddressPlaceholder": "请输入有效的 IPv6 地址，例如：2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+    "addButtonLabel": "添加",
+    "emptyAddressError": "IPv6 地址不能为空",
+    "invalidAddressError": "请输入有效的 IPv6 地址",
+    "duplicateAddressError": "该 IPv6 地址已存在于列表中",
+    "addressAddedSuccess": "IPv6 地址已成功添加",
+    "addressRemovedSuccess": "IPv6 地址已成功移除",
+    "ipv6AddressList": "IPv6 地址列表",
+    "noAddressesFound": "暂无 IPv6 地址",
+    "removeAddress": "移除地址",
+    "ipv6AddressInfoText": "IPv6 地址将用于控制访问权限。添加的 IPv6 地址可以访问共享的内容。"
   }
 }
