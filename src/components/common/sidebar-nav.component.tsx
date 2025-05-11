@@ -121,8 +121,13 @@ const SidebarNav: React.FC = () => {
     id: 'shareSpace',
     children: [
       {
-        label: t('shareSpace.all'),
-        href: '/share',
+        label: t('common.photos'),
+        href: '/share/photos',
+        icon: null
+      },
+      {
+        label: t('common.blogs'),
+        href: '/share/blogs',
         icon: null
       },
       {

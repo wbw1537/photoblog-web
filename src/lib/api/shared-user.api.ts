@@ -18,7 +18,7 @@ export const sharedUserApi = {
   setSharedUserBlocked: async (id: string) =>
     api.post<SharedUserInfo>(`/v1/shared-user/block/${id}`),
 
-  // Public API
+
   getPublicUserInfo: async (remoteAddress: string) => 
     api.get<PublicUserInfoResponse[]>(`/v1/shared-user/fetch-remote`, { params: { remoteAddress } }),
 }
