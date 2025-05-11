@@ -29,5 +29,35 @@ export const blogApi = {
    * @param id - Blog ID
    */
   deleteBlog: async (id: string) =>
-    api.delete(`/v1/blogs/${id}`)
+    api.delete(`/v1/blogs/${id}`),
+
+  /**
+   * Fetches a list of blogs from another user using shared context
+   * @param userId - ID of the user whose blogs to fetch
+   * @param filters - Search filters for blogs
+   */
+  privateGetBlogList: async (userId: string, filters: Partial<BlogRequest> = {}) =>
+    api.post<BlogListResponse>('/v1/shared-user/request', {
+      requestToUserInfo: {
+        id: userId,
+      },
+      requestUrl: '/v1/blogs',
+      requestMethod: 'GET',
+      requestHeaders: { 'Content-Type': 'application/json' }
+    }),
+
+  /**
+   * Fetch a single blog by ID from another user using shared context
+   * @param userId - ID of the user whose blog to fetch
+   * @param blogId - Blog ID
+   */
+  privateGetBlog: async (userId: string, blogId: string) =>
+    api.post<Blog>('/v1/shared-user/request', {
+      requestToUserInfo: {
+        id: userId,
+      },
+      requestUrl: `/v1/blogs/${blogId}`,
+      requestMethod: 'GET',
+      requestHeaders: { 'Content-Type': 'application/json' }
+    })
 };
