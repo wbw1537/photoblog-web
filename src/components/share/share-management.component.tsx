@@ -69,16 +69,16 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
   }, [filters, t]);
 
   // Handle user actions (block, activate)
-  const handleUserAction = async (userId: string, action: 'block' | 'activate') => {
-    setActionLoading(userId);
+  const handleUserAction = async (id: string, action: 'block' | 'activate') => {
+    setActionLoading(id);
     try {
       if (action === 'block') {
-        const response = await sharedUserApi.setSharedUserBlocked(userId);
+        const response = await sharedUserApi.setSharedUserBlocked(id);
         if (response.status === 200) {
           await fetchSharedUsers();
         }
       } else if (action === 'activate') {
-        const response = await sharedUserApi.setSharedUserActive(userId);
+        const response = await sharedUserApi.setSharedUserActive(id);
         if (response.status === 200) {
           await fetchSharedUsers();
         }
@@ -190,34 +190,34 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {sharedUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
+              {sharedUsers.map((sharedUser) => (
+                <tr key={sharedUser.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{user.sharedUserName}</div>
+                    <div className="text-sm font-medium text-gray-900">{sharedUser.sharedUserName}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{user.sharedUserEmail}</div>
+                    <div className="text-sm text-gray-500">{sharedUser.sharedUserEmail}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{user.sharedUserAddress}</div>
+                    <div className="text-sm text-gray-500">{sharedUser.sharedUserAddress}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(user.status)}`}>
-                      {t(`shareSpace.status${user.status}`)}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(sharedUser.status)}`}>
+                      {t(`shareSpace.status${sharedUser.status}`)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getDirectionBadgeClass(user.direction)}`}>
-                      {t(`shareSpace.direction${user.direction}`)}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getDirectionBadgeClass(sharedUser.direction)}`}>
+                      {t(`shareSpace.direction${sharedUser.direction}`)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
                     <button 
                       className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                      onClick={() => toggleDropdown(user.id)}
-                      disabled={actionLoading === user.id}
+                      onClick={() => toggleDropdown(sharedUser.id)}
+                      disabled={actionLoading === sharedUser.id}
                     >
-                      {actionLoading === user.id ? (
+                      {actionLoading === sharedUser.id ? (
                         <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-indigo-600"></div>
                       ) : (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -226,7 +226,7 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
                       )}
                     </button>
                     
-                    {openDropdown === user.id && (
+                    {openDropdown === sharedUser.id && (
                       <div 
                         ref={dropdownRef}
                         className="fixed z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
@@ -244,26 +244,26 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
                             {t('shareSpace.view')}
                           </button>
                           
-                          {user.status === SharedUserStatus.Active && (
+                          {sharedUser.status === SharedUserStatus.Active && (
                             <button
                               className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100"
-                              onClick={() => handleUserAction(user.id, 'block')}
+                              onClick={() => handleUserAction(sharedUser.id, 'block')}
                             >
                               {t('shareSpace.block')}
                             </button>
                           )}
                           
-                          {user.status === SharedUserStatus.Pending && user.direction === SharedUserDirection.INCOMING && (
+                          {sharedUser.status === SharedUserStatus.Pending && sharedUser.direction === SharedUserDirection.INCOMING && (
                             <>
                               <button
                                 className="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-gray-100"
-                                onClick={() => handleUserAction(user.id, 'activate')}
+                                onClick={() => handleUserAction(sharedUser.id, 'activate')}
                               >
                                 {t('shareSpace.activate')}
                               </button>
                               <button
                                 className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100"
-                                onClick={() => handleUserAction(user.id, 'block')}
+                                onClick={() => handleUserAction(sharedUser.id, 'block')}
                               >
                                 {t('shareSpace.block')}
                               </button>

@@ -12,11 +12,11 @@ export const sharedUserApi = {
   initSharingRequest: async (body: SharedUserInitRequestDTO) =>
     api.post<SharedUserInfo>('/v1/shared-user/init', body),
 
-  setSharedUserActive: async (sharedUserId: string) =>
-    api.post<SharedUserInfo>(`/v1/shared-user/active/${sharedUserId}`),
+  setSharedUserActive: async (id: string) =>
+    api.post<SharedUserInfo>(`/v1/shared-user/active/${id}`),
 
-  setSharedUserBlocked: async (sharedUserId: string) =>
-    api.post<SharedUserInfo>(`/v1/shared-user/block/${sharedUserId}`),
+  setSharedUserBlocked: async (id: string) =>
+    api.post<SharedUserInfo>(`/v1/shared-user/block/${id}`),
 
   // Public API
   getPublicUserInfo: async (remoteAddress: string) => 
