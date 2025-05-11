@@ -1,14 +1,14 @@
 import { Pagination } from "./utils.type";
 
 export enum SharedUserStatus {
-  Pending = 'PENDING',
-  Active = 'ACTIVE',
-  Blocked = 'BLOCKED',
+  Pending = 'Pending',
+  Active = 'Active',
+  Blocked = 'Blocked',
 }
 
 export enum SharedUserDirection {
-  INCOMING = 'INCOMING',
-  OUTGOING = 'OUTGOING',
+  INCOMING = 'Incoming',
+  OUTGOING = 'Outgoing',
 }
 
 export interface SharedUserRequest {
@@ -37,4 +37,33 @@ export interface SharedUserResponse {
 export interface SharedUsersResponse {
   data: SharedUserResponse[] | SharedUserResponse;
   pagination: Pagination;
+}
+
+export interface SharedUserInfo {
+  id: string;
+  name: string;
+  email: string;
+  remoteAddress: string;
+  status: SharedUserStatus;
+  direction: SharedUserDirection;
+  comment: string;
+}
+
+export interface PublicUserInfo {
+  id: string;
+  name: string;
+  email: string;
+  address: string;
+}
+
+export interface PublicUserInfoResponse {
+  users: PublicUserInfo[];
+}
+
+export interface SharedUserInitRequestDTO {
+  requestToUserInfo: {
+    id: string;
+    address: string;
+  }
+  comment: string;
 }

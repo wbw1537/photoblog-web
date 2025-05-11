@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { SharedUserResponse, SharedUserRequest, SharedUserStatus, SharedUserDirection } from '@/types/shared-user.type';
 import { sharedUserApi } from '@/lib/api/shared-user.api';
@@ -16,8 +16,25 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 10;
   const t = useTranslations();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Create a stable filters object
   const filters = useCallback(() => {
@@ -50,6 +67,30 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
       setLoading(false);
     }
   }, [filters, t]);
+
+  // Handle user actions (block, activate)
+  const handleUserAction = async (userId: string, action: 'block' | 'activate') => {
+    setActionLoading(userId);
+    try {
+      if (action === 'block') {
+        const response = await sharedUserApi.setSharedUserBlocked(userId);
+        if (response.status === 200) {
+          await fetchSharedUsers();
+        }
+      } else if (action === 'activate') {
+        const response = await sharedUserApi.setSharedUserActive(userId);
+        if (response.status === 200) {
+          await fetchSharedUsers();
+        }
+      }
+    } catch (err) {
+      logError(err);
+      setError(t('shareSpace.actionFailed'));
+    } finally {
+      setActionLoading(null);
+      setOpenDropdown(null);
+    }
+  };
 
   // Reset everything when initialFilters changes
   useEffect(() => {
@@ -86,12 +127,17 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
     }
   };
 
+  // Toggle dropdown menu
+  const toggleDropdown = (userId: string) => {
+    setOpenDropdown(openDropdown === userId ? null : userId);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">{t('shareSpace.managementTitle')}</h1>
         <Link 
-          href="/shared/add"
+          href="/share/management/add"
           className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
         >
           {t('shareSpace.addSharedUser')}
@@ -165,14 +211,66 @@ const ShareManagement: React.FC<ShareManagementProps> = ({ initialFilters }) => 
                       {t(`shareSpace.direction${user.direction}`)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-indigo-600 hover:text-indigo-900 mr-3">
-                      {t('shareSpace.view')}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                    <button 
+                      className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                      onClick={() => toggleDropdown(user.id)}
+                      disabled={actionLoading === user.id}
+                    >
+                      {actionLoading === user.id ? (
+                        <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-indigo-600"></div>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                        </svg>
+                      )}
                     </button>
-                    {user.status !== SharedUserStatus.Blocked && (
-                      <button className="text-red-600 hover:text-red-900">
-                        {t('shareSpace.block')}
-                      </button>
+                    
+                    {openDropdown === user.id && (
+                      <div 
+                        ref={dropdownRef}
+                        className="fixed z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                        style={{
+                          top: 'auto',
+                          right: 'auto',
+                          transform: 'translateY(0)'
+                        }}
+                      >
+                        <div className="py-1" role="menu" aria-orientation="vertical">
+                          <button
+                            className="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-gray-100"
+                            onClick={() => {/* View action implementation */}}
+                          >
+                            {t('shareSpace.view')}
+                          </button>
+                          
+                          {user.status === SharedUserStatus.Active && (
+                            <button
+                              className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100"
+                              onClick={() => handleUserAction(user.id, 'block')}
+                            >
+                              {t('shareSpace.block')}
+                            </button>
+                          )}
+                          
+                          {user.status === SharedUserStatus.Pending && user.direction === SharedUserDirection.INCOMING && (
+                            <>
+                              <button
+                                className="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-gray-100"
+                                onClick={() => handleUserAction(user.id, 'activate')}
+                              >
+                                {t('shareSpace.activate')}
+                              </button>
+                              <button
+                                className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100"
+                                onClick={() => handleUserAction(user.id, 'block')}
+                              >
+                                {t('shareSpace.block')}
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </td>
                 </tr>

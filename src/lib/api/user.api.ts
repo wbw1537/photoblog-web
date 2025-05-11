@@ -4,7 +4,7 @@ import {
   RegisterRequest, 
   UserLoginResponse, 
   UserResponse,
-  EmailAvailabilityRequest
+  EmailAvailabilityRequest,
 } from "@/types/user.type";
 import api from "@/lib/utils/api.util";
 
