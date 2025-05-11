@@ -52,11 +52,8 @@ const CommonToolbar: React.FC<CommonToolbarProps> = ({ children }) => {
               <p className="text-sm font-medium text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             </div>
-              <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <a href="/settings/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 {t('common.profile')}
-              </a>
-              <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                {t('common.settings')}
               </a>
             <button
               onClick={handleLogout}

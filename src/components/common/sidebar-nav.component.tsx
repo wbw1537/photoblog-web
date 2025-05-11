@@ -133,7 +133,29 @@ const SidebarNav: React.FC = () => {
     ]
   }
 
-  const navItems: NavItem[] = [photoNavItems, blogNavItems, shareSpaceItems];
+  const settingsNavItems: NavItem = {
+    label: t('common.settings'),
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 10c-4.4 0-8-1.8-8-4V9c0-2.2 3.6-4 8-4s8 1.8 8 4v5c0 2.2-3.6 4-8 4z" />
+      </svg>
+    ),
+    id: 'settings',
+    children: [
+      {
+        label: t('photos.scan'),
+        href: '/settings/scan',
+        icon: null
+      },
+      {
+        label: t('common.profile'),
+        href: '/settings/profile',
+        icon: null
+      }
+    ]
+  }
+
+  const navItems: NavItem[] = [photoNavItems, blogNavItems, shareSpaceItems, settingsNavItems];
 
   const renderNavItem = (item: NavItem) => {
     const isActive = pathname === item.href;

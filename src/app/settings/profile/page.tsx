@@ -1,6 +1,6 @@
 import SidebarNav from '@/components/common/sidebar-nav.component';
-import ProfilePage from '@/components/profile/profile-page.component';
-import ProfileToolbar from '@/components/profile/profile-toolbar.component';
+import ProfilePage from '@/components/settings/profile/profile-page.component';
+import ProfileToolbar from '@/components/settings/profile/profile-toolbar.component';
 
 const Profile = () => {
   return (

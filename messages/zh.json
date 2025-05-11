@@ -40,7 +40,8 @@
     "checking": "检查中...",
     "stillPending": "您的账户仍在等待审批。",
     "errorCheckingStatus": "检查审批状态时出错。请重试。",
-    "signOut": "登出"
+    "signOut": "登出",
+    "optional": "可选"
   },
   "basePath": {
     "basePath": "存储路径",
@@ -66,6 +67,7 @@
     "library": "图库",
     "errorLoading": "加载照片时出错",
     "noPhotosFound": "未找到照片",
+    "scan": "扫描",
     "scanStatus": "扫描状态",
     "scanStatusTitle": "图库扫描状态",
     "loading": "加载中...",
@@ -75,7 +77,20 @@
     "photosNotMatchedMatchedWithIncrease": "不匹配但已增加匹配的照片",
     "photosNotMatchedDeleted": "不匹配且已删除的照片",
     "photosMatched": "匹配的照片",
-    "photosMatchedUpdated": "匹配且已更新的照片"
+    "photosMatchedUpdated": "匹配且已更新的照片",
+    "scanLibrary": "图库扫描",
+    "scanDescription": "扫描图库以更新您的照片集合",
+    "fullScan": "完整扫描",
+    "deltaScan": "增量扫描",
+    "startFullScan": "开始完整扫描",
+    "startDeltaScan": "开始增量扫描",
+    "initializingScan": "正在初始化扫描...",
+    "statusInitializing": "初始化中",
+    "statusInProgress": "扫描中",
+    "statusCompleted": "已完成",
+    "statusError": "出错",
+    "scanCompletedMessage": "扫描已成功完成！",
+    "scanErrorMessage": "扫描过程中出现错误，请重试。"
   },
   "blogs": {
     "all": "全部",
@@ -92,8 +107,8 @@
   },
   "shareSpace": {
     "all": "全部",
-    "management": "管理",
-    "managementTitle": "IPv6 地址管理",
+    "management": "地址管理",
+    "managementTitle": "共享用户管理",
     "addIpv6Address": "添加 IPv6 地址",
     "ipv6AddressLabel": "IPv6 地址",
     "ipv6AddressPlaceholder": "请输入有效的 IPv6 地址，例如：2001:0db8:85a3:0000:0000:8a2e:0370:7334",
@@ -106,6 +121,31 @@
     "ipv6AddressList": "IPv6 地址列表",
     "noAddressesFound": "暂无 IPv6 地址",
     "removeAddress": "移除地址",
-    "ipv6AddressInfoText": "IPv6 地址将用于控制访问权限。添加的 IPv6 地址可以访问共享的内容。"
+    "addSharedUser": "添加共享用户",
+    "userName": "用户名",
+    "email": "邮箱",
+    "address": "地址",
+    "status": "状态",
+    "statusACTIVE": "已激活",
+    "statusPENDING": "待审核",
+    "statusBLOCKED": "已阻止",
+    "direction": "方向",
+    "directionINCOMING": "接收",
+    "directionOUTGOING": "发送",
+    "actions": "操作",
+    "view": "查看",
+    "block": "阻止",
+    "errorLoading": "加载共享用户时出错",
+    "noSharedUsers": "暂无共享用户",
+    "previous": "上一页",
+    "next": "下一页",
+    "comment": "备注",
+    "commentPlaceholder": "添加有关此共享用户的备注信息",
+    "invite": "发送邀请",
+    "statusActive": "激活",
+    "statusPending": "待审核",
+    "statusBlocked": "阻止",
+    "directionIncoming": "接收",
+    "directionOutgoing": "发送"
   }
 }

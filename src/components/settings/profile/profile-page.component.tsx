@@ -5,6 +5,7 @@ import { userApi } from '@/lib/api/user.api';
 import { UserResponse } from '@/types/user.type';
 import { useTranslations } from 'next-intl';
 import { logError } from '@/lib/utils/error.util';
+import styles from './profile-page.module.css';
 
 const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<UserResponse | null>(null);
@@ -54,135 +55,157 @@ const ProfilePage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>{t('common.loading')}</div>;
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+        <p>{t('common.loading')}</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className={styles.errorMessage}>
+        <p>{error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className={styles.retryButton}
+        >
+          {t('common.retry')}
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">{t('common.profile')}</h1>
+    <div className={styles.profileContainer}>
+      <div className={styles.profileHeader}>
+        <h1>{t('common.profile')}</h1>
+      </div>
+      
       {user && (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-lg font-semibold mb-1">
-              {t('auth.userName')}
-            </label>
+        <div className={styles.profileContent}>
+          <div className={styles.fieldGroup}>
+            <label>{t('auth.userName')}</label>
             {isEditing ? (
               <input
                 type="text"
                 name="name"
                 value={formData.name || ''}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                className={styles.inputField}
               />
             ) : (
-              <p className="text-gray-700">{user.name}</p>
+              <div className={styles.fieldValue}>{user.name}</div>
             )}
           </div>
-          <div>
-            <label className="block text-lg font-semibold mb-1">
-              {t('auth.email')}
-            </label>
-            <p>
-              <a href={`mailto:${user.email}`} className="underline">
+          
+          <div className={styles.fieldGroup}>
+            <label>{t('auth.email')}</label>
+            <div className={styles.fieldValue}>
+              <a href={`mailto:${user.email}`} className={styles.emailLink}>
                 {user.email}
               </a>
-            </p>
+            </div>
           </div>
-          <div>
-            <label className="block text-lg font-semibold mb-1">
-              {t('basePath.basePath')}
-            </label>
+          
+          <div className={styles.fieldGroup}>
+            <label>{t('basePath.basePath')}</label>
             {isEditing ? (
               <input
                 type="text"
                 name="basePath"
                 value={formData.basePath || ''}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                className={styles.inputField}
               />
             ) : (
-              <p className="text-gray-700">{user.basePath}</p>
+              <div className={styles.fieldValue}>{user.basePath}</div>
             )}
           </div>
-          <div>
-            <label className="block text-lg font-semibold mb-1">
-              {t('auth.type')}
-            </label>
+          
+          <div className={styles.fieldGroup}>
+            <label>{t('auth.type')}</label>
             {isEditing ? (
               <input
                 type="text"
                 name="type"
                 value={formData.type || ''}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                className={styles.inputField}
               />
             ) : (
-              <p className="text-gray-700">{user.type}</p>
+              <div className={styles.fieldValue}>{user.type}</div>
             )}
           </div>
-          <div>
-            <label className="block text-lg font-semibold mb-1">
-              {t('auth.address')}
-            </label>
+          
+          <div className={styles.fieldGroup}>
+            <label>{t('auth.address')}</label>
             {isEditing ? (
               <input
                 type="text"
                 name="address"
                 value={formData.address || ''}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                className={styles.inputField}
               />
             ) : (
-              <p>
-                <a href={`http://${user.address}`} target="_blank" rel="noopener noreferrer" className="underline">
+              <div className={styles.fieldValue}>
+                <a 
+                  href={`http://${user.address}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.addressLink}
+                >
                   {user.address}
                 </a>
-              </p>
+              </div>
             )}
           </div>
-          <div>
-            <label className="block text-lg font-semibold mb-1">
-              {t('auth.cachePath')}
-            </label>
+          
+          <div className={styles.fieldGroup}>
+            <label>{t('auth.cachePath')}</label>
             {isEditing ? (
               <input
                 type="text"
                 name="cachePath"
                 value={formData.cachePath || ''}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                className={styles.inputField}
               />
             ) : (
-              <p className="text-gray-700">{user.cachePath}</p>
+              <div className={styles.fieldValue}>{user.cachePath}</div>
             )}
           </div>
-          {isEditing ? (
-            <div className="flex space-x-4">
+          
+          <div className={styles.actionButtons}>
+            {isEditing ? (
+              <>
+                <button
+                  onClick={handleSave}
+                  className={styles.saveButton}
+                >
+                  {t('profile.save')}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsEditing(false);
+                    setFormData(user); // Reset form data on cancel
+                  }}
+                  className={styles.cancelButton}
+                >
+                  {t('profile.cancel')}
+                </button>
+              </>
+            ) : (
               <button
-                onClick={handleSave}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                onClick={() => setIsEditing(true)}
+                className={styles.editButton}
               >
-                {t('profile.save')}
+                {t('profile.edit')}
               </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                {t('profile.cancel')}
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-            >
-              {t('profile.edit')}
-            </button>
-          )}
+            )}
+          </div>
         </div>
       )}
     </div>
