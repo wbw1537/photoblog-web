@@ -41,7 +41,11 @@
     "stillPending": "您的账户仍在等待审批。",
     "errorCheckingStatus": "检查审批状态时出错。请重试。",
     "signOut": "登出",
-    "optional": "可选"
+    "optional": "可选",
+    "approvedTitle": "账户已审批",
+    "approvedDescription": "您的账户已获得审批，现在可以登录使用了。",
+    "redirectCountdown": "{{seconds}} 秒后自动跳转到登录页面",
+    "redirectNow": "立即登录"
   },
   "basePath": {
     "basePath": "存储路径",

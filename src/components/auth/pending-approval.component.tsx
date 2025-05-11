@@ -11,6 +11,8 @@ import { handleApiError, logError } from '@/lib/utils/error.util';
 const PendingApprovalComponent: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isApproved, setIsApproved] = useState(false);
+  const [countdown, setCountdown] = useState(5);
   const router = useRouter();
   const t = useTranslations();
   const { user, setUser } = useAuth();
@@ -19,10 +21,25 @@ const PendingApprovalComponent: React.FC = () => {
   useEffect(() => {
     if (!user) {
       router.push('/auth/login');
-    } else if (user.type !== UserType.Pending) {
-      router.push('/');
     }
   }, [user, router]);
+
+  // Handle countdown and auto-redirect when approved
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (isApproved && countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+    } else if (isApproved && countdown === 0) {
+      router.push('/auth/login');
+    }
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isApproved, countdown, router]);
 
   const checkApprovalStatus = async () => {
     setIsRefreshing(true);
@@ -36,8 +53,8 @@ const PendingApprovalComponent: React.FC = () => {
       setUser(response.data);
       
       if (response.data.type !== UserType.Pending) {
-        // User has been approved, redirect to home
-        router.push('/');
+        // User has been approved, start countdown
+        setIsApproved(true);
       } else {
         // Still pending
         setError(t('auth.stillPending'));
@@ -60,6 +77,10 @@ const PendingApprovalComponent: React.FC = () => {
     }
   };
 
+  const handleManualRedirect = () => {
+    router.push('/auth/login');
+  };
+
   // If no user data, show loading or redirect handled by useEffect
   if (!user) {
     return <div className="text-center py-8">Loading...</div>;
@@ -68,48 +89,83 @@ const PendingApprovalComponent: React.FC = () => {
   return (
     <div className="text-center py-8 space-y-6">
       <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-yellow-100">
-        <svg 
-          className="w-8 h-8 text-yellow-600" 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" 
-          />
-        </svg>
+        {isApproved ? (
+          <svg 
+            className="w-8 h-8 text-green-600" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M5 13l4 4L19 7" 
+            />
+          </svg>
+        ) : (
+          <svg 
+            className="w-8 h-8 text-yellow-600" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" 
+            />
+          </svg>
+        )}
       </div>
       
-      <h2 className="text-2xl font-bold text-gray-800">{t('auth.pendingTitle')}</h2>
-      <p className="text-gray-600">{t('auth.pendingDescription')}</p>
-      
-      {error && (
-        <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md border border-red-300">
-          {error}
-        </div>
+      {isApproved ? (
+        <>
+          <h2 className="text-2xl font-bold text-green-800">{t('auth.approvedTitle')}</h2>
+          <p className="text-gray-600">{t('auth.approvedDescription')}</p>
+          <p className="text-indigo-600 font-medium">
+            {t('auth.redirectCountdown', { seconds: countdown })}
+          </p>
+          <button
+            onClick={handleManualRedirect}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            {t('auth.redirectNow')}
+          </button>
+        </>
+      ) : (
+        <>
+          <h2 className="text-2xl font-bold text-gray-800">{t('auth.pendingTitle')}</h2>
+          <p className="text-gray-600">{t('auth.pendingDescription')}</p>
+          
+          {error && (
+            <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md border border-red-300">
+              {error}
+            </div>
+          )}
+          
+          <button
+            onClick={checkApprovalStatus}
+            disabled={isRefreshing}
+            className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white 
+              ${isRefreshing ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} 
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+          >
+            {isRefreshing ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {t('auth.checking')}
+              </>
+            ) : t('auth.refreshStatus')}
+          </button>
+        </>
       )}
-      
-      <button
-        onClick={checkApprovalStatus}
-        disabled={isRefreshing}
-        className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white 
-          ${isRefreshing ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} 
-          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-      >
-        {isRefreshing ? (
-          <>
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            {t('auth.checking')}
-          </>
-        ) : t('auth.refreshStatus')}
-      </button>
     </div>
   );
 };

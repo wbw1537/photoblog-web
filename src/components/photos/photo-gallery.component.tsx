@@ -6,6 +6,7 @@ import { photoApi } from '@/lib/api/photo.api';
 import PhotoCard from './photo-card.component';
 import { useTranslations } from 'next-intl';
 import { logError } from '@/lib/utils/error.util';
+import { useRouter } from 'next/navigation';
 
 interface PhotoGalleryProps {
   initialFilters?: Partial<PhotosRequest>;
@@ -21,6 +22,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialFilters, onPhotoSele
   const observer = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement>(null);
   const t = useTranslations();
+  const router = useRouter();
   // Increase page size to a more reasonable number
   const PAGE_SIZE = 24;
 
@@ -165,11 +167,36 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialFilters, onPhotoSele
     distributePhotosToColumns();
   }, [photos, distributePhotosToColumns]);
 
+  // Navigation handler for scan page
+  const handleNavigateToScan = () => {
+    router.push('/settings/scan');
+  };
+
   return (
     <div>
       {photos.length === 0 && !loading && !error ? (
         <div className="flex flex-col items-center justify-center py-12">
-          <p className="text-gray-500">{t('photos.noPhotosFound')}</p>
+          <p className="text-gray-500 mb-4">{t('photos.noPhotosFound')}</p>
+          <button
+            onClick={handleNavigateToScan}
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center"
+          >
+            <svg
+              className="w-5 h-5 mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+              />
+            </svg>
+            {t('photos.scanLibrary')}
+          </button>
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center py-12">
